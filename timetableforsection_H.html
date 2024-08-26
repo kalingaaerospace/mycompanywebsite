@@ -2,10 +2,17 @@
 <html>
 <head>
     <title>Section H Timetable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 20px 0;
         }
         table, th, td {
             border: 1px solid black;
@@ -16,6 +23,27 @@
         }
         th {
             background-color: #f2f2f2;
+        }
+        h2, h3 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        ul {
+            margin: 0;
+            padding: 10px;
+            list-style-type: none;
+        }
+        li {
+            margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            table {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -33,6 +61,7 @@
         <th>1:30 PM - 2:30 PM</th>
         <th>2:30 PM - 3:30 PM</th>
         <th>3:30 PM - 4:30 PM</th>
+        <th>4:30 PM - 5:30 PM</th>
     </tr>
     <tr>
         <td>Monday</td>
@@ -43,6 +72,7 @@
         <td>Applied Engineering Materials Lab H-1 &<br> Electronics Devices and Systems Lab H-2</td>
         <td></td>
         <td>Environmental Studies</td>
+        <td></td>
     </tr>
     <tr>
         <td>Tuesday</td>
@@ -53,6 +83,7 @@
         <td>Applied Engineering Materials Lab H-2 &<br> Electronics Devices and Systems Lab H-1</td>
         <td></td>
         <td>Data Analysis and Visualization Using Python</td>
+        <td></td>
     </tr>
     <tr>
         <td>Wednesday</td>
@@ -62,6 +93,7 @@
         <td>Lunch</td>
         <td>Discrete Mathematics</td>
         <td>Engineering Economics and Costing</td>
+        <td></td>
         <td></td>
     </tr>
     <tr>
@@ -73,6 +105,7 @@
         <td>Discrete Mathematics</td>
         <td>Data Analysis and Visualization Using Python</td>
         <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>Friday</td>
@@ -81,6 +114,7 @@
         <td>Data Analysis and Visualization Using Python</td>
         <td>Lunch</td>
         <td>Data Analysis and Visualization Using Python Lab 304</td>
+        <td></td>
         <td></td>
         <td></td>
     </tr>
@@ -93,8 +127,21 @@
         <td>Mentoring, Value Added Courses & CSR Activity</td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
 </table>
+
+<h3>List of Teachers and Subjects</h3>
+
+<ul>
+    <li>Dr. A. Sharma - Electronics Devices and Systems</li>
+    <li>Prof. B. Singh - Applied Engineering Materials</li>
+    <li>Dr. C. Gupta - Environmental Studies</li>
+    <li>Prof. D. Patel - Engineering Economics and Costing</li>
+    <li>Ms. E. Rao - Discrete Mathematics</li>
+    <li>Mr. F. Mishra - Data Analysis and Visualization Using Python</li>
+    <li>Mrs. G. Verma - JOB READINESS/ENGLISH</li>
+</ul>
 
 </body>
 </html>
