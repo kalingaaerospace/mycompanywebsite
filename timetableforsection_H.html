@@ -7,102 +7,129 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
         }
         th, td {
-            border: 1px solid #000;
+            padding: 10px;
             text-align: center;
-            padding: 8px;
         }
         th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-        td[colspan="8"] {
-            text-align: left;
-            padding-left: 15px;
-        }
-        .footer {
-            text-align: center;
-            padding-top: 15px;
-            font-size: 14px;
-            font-style: italic;
+        .subject-info {
+            margin: 10px 0;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <h2>Section H - Timetable</h2>
+
+<div class="container">
+    <h1>Section H Timetable</h1>
+
     <table>
-        <tr>
-            <th>Days</th>
-            <th>9:30AM-10:30AM</th>
-            <th>10:30AM-11:30AM</th>
-            <th>11:30AM-12:30PM</th>
-            <th>12:30PM-1:30PM</th>
-            <th>1:30PM-3:30PM</th>
-            <th>3:30PM-4:30PM</th>
-            <th>4:30PM-5:30PM</th>
-        </tr>
-        <tr>
-            <td>Monday</td>
-            <td>Electronics Devices and Systems</td>
-            <td>Electronics Devices and Systems</td>
-            <td>Engineering Economics and Costing</td>
-            <td></td>
-            <td>Applied Engineering Materials Lab H-1 &<br>Electronics Devices and Systems Lab H-2</td>
-            <td></td>
-            <td>Environmental Science</td>
-        </tr>
-        <tr>
-            <td>Tuesday</td>
-            <td>Environmental Science</td>
-            <td>Discrete Mathematics</td>
-            <td>JOB READINESS/ENGLISH</td>
-            <td>Lunch</td>
-            <td>Applied Engineering Materials Lab H-2 &<br>Electronics Devices and Systems Lab H-1</td>
-            <td></td>
-            <td>Data Analysis and Visualization Using Python</td>
-        </tr>
-        <tr>
-            <td>Wednesday</td>
-            <td></td>
-            <td>Environmental Science</td>
-            <td>Applied Engineering Materials</td>
-            <td></td>
-            <td>Discrete Mathematics</td>
-            <td>Engineering Economics and Costing</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Thursday</td>
-            <td>Engineering Economics and Costing</td>
-            <td>Electronics Devices and Systems</td>
-            <td>Applied Engineering Materials</td>
-            <td></td>
-            <td>Discrete Mathematics</td>
-            <td>Data Analysis and Visualization Using Python</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Friday</td>
-            <td></td>
-            <td>JOB READINESS/ENGLISH</td>
-            <td>Data Analysis and Visualization Using Python</td>
-            <td></td>
-            <td>Data Analysis and Visualization Using Python Lab 304</td>
-            <td></td>
-            <td>Environmental Science</td>
-        </tr>
-        <tr>
-            <td>Saturday</td>
-            <td colspan="8">Mentoring, Value Added Courses & CSR Activity</td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>9:30AM - 10:30AM</th>
+                <th>10:30AM - 11:30AM</th>
+                <th>11:30AM - 12:30PM</th>
+                <th>12:30PM - 1:30PM</th>
+                <th>1:30PM - 2:30PM</th>
+                <th>2:30PM - 3:30PM</th>
+                <th>3:30PM - 4:30PM</th>
+                <th>4:30PM - 5:30PM</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Monday</td>
+                <td>Electronics Devices and Systems</td>
+                <td>Electronics Devices and Systems</td>
+                <td>Engineering Economics and Costing</td>
+                <td></td>
+                <td colspan="2">Applied Engineering Materials Lab H-1 &<br>Electronics Devices and Systems Lab H-2</td>
+                <td></td>
+                <td>Environmental Science</td>
+            </tr>
+            <tr>
+                <td>Tuesday</td>
+                <td>Environmental Science</td>
+                <td>Discrete Mathematics</td>
+                <td></td>
+                <td>Lunch</td>
+                <td colspan="2">Applied Engineering Materials Lab H-2 &<br>Electronics Devices and Systems Lab H-1</td>
+                <td>Data Analysis and Visualization Using Python</td>
+            </tr>
+            <tr>
+                <td>Wednesday</td>
+                <td>Job Readiness/English</td>
+                <td>Environmental Science</td>
+                <td>Applied Engineering Materials</td>
+                <td></td>
+                <td>Discrete Mathematics</td>
+                <td>Engineering Economics and Costing</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Thursday</td>
+                <td>Engineering Economics and Costing</td>
+                <td>Electronics Devices and Systems</td>
+                <td>Applied Engineering Materials</td>
+                <td></td>
+                <td>Discrete Mathematics</td>
+                <td>Data Analysis and Visualization Using Python</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Friday</td>
+                <td></td>
+                <td>Job Readiness/English</td>
+                <td>Data Analysis and Visualization Using Python</td>
+                <td></td>
+                <td>Data Analysis and Visualization Using Python Lab 304</td>
+                <td></td>
+                <td>Environmental Science</td>
+            </tr>
+        </tbody>
     </table>
 
-    <div class="footer">
-        <p>Teacher: Mr. Ranjit Kumar Pattanayak</p>
+    <div class="subject-info">
+        <strong>Faculty for Section H:</strong><br>
+        <ul>
+            <li><strong>Discrete Mathematics:</strong> Dr. Tumbanath Samantara</li>
+            <li><strong>Data Analysis and Visualization Using Python:</strong> Prof. Surya Narayan Sahu</li>
+            <li><strong>Applied Engineering Materials:</strong> Dr. Dojalisa Sahu</li>
+            <li><strong>Electronics Devices and Systems:</strong> Prof. Swarna Prabha Jena</li>
+            <li><strong>Engineering Economics and Costing:</strong> Prof. Sandip Samantaray</li>
+            <li><strong>Environmental Science:</strong> Dr. Saismrutiranjan Mohanty</li>
+            <li><strong>Job Readiness/English:</strong> Prof. Ankita Mohanty</li>
+        </ul>
     </div>
+</div>
+
 </body>
 </html>
