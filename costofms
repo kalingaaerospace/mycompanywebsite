@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnetic Propulsion System Cost & Revenue Estimates</title>
+    <!-- Bootstrap for responsive layout -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .graph-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .graph-container canvas {
+            max-width: 45%;
+        }
+        .cost-section, .revenue-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Magnetic Propulsion System: Cost & Revenue Estimates</h1>
+
+    <!-- Cost Estimates Section -->
+    <div class="cost-section">
+        <h3>Cost Estimates</h3>
+        <ul>
+            <li>Research & Development (R&D): ₹20,00,000 – ₹30,00,000</li>
+            <li>Electromagnet System: ₹10,00,000 – ₹12,00,000</li>
+            <li>Electromagnetic Field Neutralizer: ₹8,00,000 – ₹10,00,000</li>
+            <li>Power Source (CSP): ₹15,00,000 – ₹20,00,000</li>
+            <li>Spacecraft Structure & Materials: ₹12,00,000 – ₹15,00,000</li>
+            <li>Electronics & Control Systems: ₹7,00,000 – ₹9,00,000</li>
+            <li>Testing & Validation: ₹10,00,000 – ₹12,00,000</li>
+            <li>Miscellaneous Costs: ₹5,00,000 – ₹8,00,000</li>
+        </ul>
+    </div>
+
+    <!-- Revenue Estimates Section -->
+    <div class="revenue-section">
+        <h3>Revenue Estimates</h3>
+        <p>Projected revenue from the prototype launch and service provision is shown below:</p>
+        <ul>
+            <li>Initial Prototype Revenue (First Year): ₹50,00,000</li>
+            <li>Year 2: ₹75,00,000</li>
+            <li>Year 3 (Full-Scale Service): ₹1,50,00,000</li>
+        </ul>
+    </div>
+
+    <!-- Graph Section -->
+    <div class="graph-container">
+        <div style="width: 48%;">
+            <h4>Cost Estimate Breakdown</h4>
+            <canvas id="costChart"></canvas>
+        </div>
+        <div style="width: 48%;">
+            <h4>Revenue Estimate Over Time</h4>
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+// Data for cost breakdown
+const costData = {
+    labels: ['R&D', 'Electromagnet System', 'Magnetic Neutralizer', 'CSP Power', 'Spacecraft Materials', 'Electronics & Control', 'Testing & Validation', 'Miscellaneous'],
+    datasets: [{
+        label: 'Cost Estimate (₹ in Lakh)',
+        data: [25, 11, 9, 18, 13, 8, 11, 6], // Midpoint values of cost range
+        backgroundColor: '#4e73df',
+        borderColor: '#4e73df',
+        borderWidth: 1
+    }]
+};
+
+// Data for revenue estimate
+const revenueData = {
+    labels: ['Year 1', 'Year 2', 'Year 3'],
+    datasets: [{
+        label: 'Revenue Estimate (₹ in Lakh)',
+        data: [50, 75, 150],
+        backgroundColor: '#1cc88a',
+        borderColor: '#1cc88a',
+        borderWidth: 1
+    }]
+};
+
+// Cost chart initialization
+const ctx1 = document.getElementById('costChart').getContext('2d');
+const costChart = new Chart(ctx1, {
+    type: 'bar',
+    data: costData,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Revenue chart initialization
+const ctx2 = document.getElementById('revenueChart').getContext('2d');
+const revenueChart = new Chart(ctx2, {
+    type: 'line',
+    data: revenueData,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
