@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evil vs Good Counter</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #121212; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+        }
+        .container {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 { color: #00ff99; }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin: 10px 0;
+            border: 2px solid #00ff99;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background: #00ff99;
+            color: black;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #00cc77;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .binary-text { color: #ffcc00; font-weight: bold; }
+        .good { color: #00ff99; }
+        .evil { color: #ff4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Evil vs Good Counter</h1>
+        <p>Enter a name or number to analyze its "Evil" (1s) and "Good" (0s) count!</p>
+        <input type="text" id="inputText" placeholder="Enter name or number">
+        <button onclick="calculateEvilGood()">Analyze</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        function calculateEvilGood() {
+            let input = document.getElementById('inputText').value.trim();
+            if (!input) return alert('Please enter a value!');
+            
+            let binaryString = '';
+            for (let char of input) {
+                binaryString += char.charCodeAt(0).toString(2).padStart(8, '0') + ' ';
+            }
+            
+            let ones = (binaryString.match(/1/g) || []).length;
+            let zeros = (binaryString.match(/0/g) || []).length;
+            
+            document.getElementById('result').innerHTML = 
+                `<p><strong>Binary:</strong> <span class='binary-text'>${binaryString}</span></p>
+                 <p><strong class='good'>Good (0s):</strong> ${zeros}</p>
+                 <p><strong class='evil'>Evil (1s):</strong> ${ones}</p>`;
+        }
+    </script>
+</body>
+</html>
