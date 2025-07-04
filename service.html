@@ -13,7 +13,7 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="images/Kalinga.png" type="">
 
-  <title> KALINGA AEROSPACE | SERVICES </title>
+  <title>About Our Technology | KALINGA AEROSPACE</title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -32,6 +32,11 @@
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
 
+  <!-- AOS Animation Library -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <!-- Lottie Player for micro-animations -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 </head>
 
 <body class="sub_page">
@@ -49,9 +54,7 @@
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="index.html">
-            <span>
-              KALINGA AEROSPACE
-            </span>
+            <span>KALINGA AEROSPACE <span class="brand-accent">Pvt Ltd</span></span>
           </a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,24 +63,22 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  ">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://blogs.kalingaaerospace.in/">Blogs</a>
+              </li>
               <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="service.html">About Our Technology <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="about.html"> About Us </a>
+                <a class="nav-link" href="Privacy Policy ＆ Terms and Conditions.html">Privacy Policy ＆ Terms and Conditions</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="blog.html">Blogs</a>
-
-
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="service.html">Services</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="Privacy Policy ＆ Terms and Conditions.html">Privacy Policy ＆ Terms and Conditions
-
-                </a>
+            </ul>
           </div>
         </nav>
       </div>
@@ -85,195 +86,134 @@
     <!-- end header section -->
   </div>
 
+  <!-- Hero Headline & Subheadline -->
+  <section class="about_tech_hero layout_padding" style="background:rgba(0,187,240,0.04);">
+    <div class="container text-center">
+      <h1 style="font-size:2.5rem;font-weight:700;">About Our Technology</h1>
+      <h3 style="font-weight:400;color:#00bbf0;margin-top:12px;max-width:700px;margin-left:auto;margin-right:auto;">
+        A deep-tech space company building a clean, scalable alternative to chemical rockets—powered by magnetic force and renewable energy.
+      </h3>
+    </div>
+  </section>
 
-  <!-- service section -->
-
-  <section class="service_section layout_padding">
-    <div class="service_container">
-      <div class="container ">
-        <div class="heading_container heading_center">
-          <h2>
-            Our <span>Services</span>
-          </h2>
+  <!-- Content Block 1: How It Works -->
+  <section class="layout_padding" style="background:#fff;">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
+          <h2 style="font-weight:700;">How It Works</h2>
           <p>
-            
-Providing affordable launch services, developing efficient satellites, and offering comprehensive payload integration and testing.
+            At the core of our innovation is a revolutionary concept: using magnetic fields to overcome Earth's gravity and launch payloads into space—without any combustion or fuel-based propulsion. Unlike traditional rockets that burn fuel to generate thrust, our system relies on the precise control of magnetic repulsion between two engineered systems: a stationary magnetic ground station and a magnetically active spacecraft.
           </p>
         </div>
-        <div class="row">
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/s1.png" alt="https://blogs.kalingaaerospace.in/p/affordable-launch-services-pioneering.html">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Affordable Launch Services
-
-                </h5>
-                <p>
-                  We provide cost-effective rocket launch services, reducing the cost per kilogram to space significantly. Our goal is to make space accessible to a wider audience by bringing down the price to under $100 per kilogram.
-                </p>
-                <a href="https://blogs.kalingaaerospace.in/p/affordable-launch-services-pioneering.html">
-                  Read More
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/s2.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Satellite Development
-                </h5>
-                <p>
-                  Our team develops small - BIG, efficient satellites under the brand K-Sat. 
-                  These satellites are cost-effective yet powerful, designed to meet diverse needs with high performance and reliability for various applications.
-                </p>
-                <a href="https://blogs.kalingaaerospace.in/2024/07/k-sat-satellite-revolutionizing-access.html">
-                  Read More
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/testing payload.gif" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Payload Integration and Testing
-                </h5>
-                <p>
-                  We offer comprehensive payload integration and testing services to ensure your instruments and experiments are mission-ready. Our facilities and expert team ensure that all components are 
-                  seamlessly integrated and rigorously tested for optimal performance during flight.
-                </p>
-                <a href="https://blogs.kalingaaerospace.in/2024/07/payload-integration-and-testing.html">
-                  Read More
-                </a>
-              </div>
-            </div>
-          </div>
+        <div class="col-md-6 text-center" data-aos="fade-left" data-aos-delay="200">
+          <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:320px;height:320px;" loop autoplay></lottie-player>
         </div>
-        <!-- <div class="btn-box">
-          <a href="">
-            View All
-          </a>
-        </div> -->
       </div>
     </div>
   </section>
 
-  <!-- end service section -->
+  <!-- Content Block 2: The Role of Magnetic Fields -->
+  <section class="layout_padding" style="background:rgba(0,187,240,0.04);">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center" data-aos="fade-right" data-aos-delay="100">
+          <img src="images/oursat.png" alt="Magnetic Field Schematic" style="max-width:320px;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+        </div>
+        <div class="col-md-6" data-aos="fade-left" data-aos-delay="200">
+          <h2 style="font-weight:700;">The Role of Magnetic Fields</h2>
+          <p>
+            Our propulsion system operates on the fundamental principle of electromagnetic force generation. The spacecraft carries an onboard magnetic field generator, which remains constant during the launch. This is achieved using either a fixed superconducting solenoid or a Halbach array of permanent magnets, known for producing a strong, directed magnetic field with minimal external interference. The spacecraft's magnetic orientation and intensity are optimized for stability, efficiency, and force response during liftoff.
+          </p>
+          <p>
+            The ground station is designed as a large-scale, concentric array of superconducting electromagnets wound around high-permeability cores. These coils produce a dynamically tunable magnetic field, controlled in real-time by a coordinated power supply system. The system adjusts current flow in response to live sensor feedback—including position, acceleration, altitude, and field measurements—allowing precise modulation of force as the spacecraft ascends.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Block 3: A Future Without Rockets -->
+  <section class="layout_padding" style="background:#fff;">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
+          <h2 style="font-weight:700;">A Future Without Rockets</h2>
+          <p>
+            By replacing propellant-based impulse with intelligently controlled magnetic fields, we aim to deliver a launch system that is fully electric and renewable, extremely cost-efficient, reusable, and scalable. Our approach is inherently safer and more sustainable than any chemical rocket.
+          </p>
+          <p>
+            This is not just a new way to launch—it is a new philosophy of space access. We envision a future where spaceflight is driven by fields, not fuel, and our technology is the foundation to make that future real.
+          </p>
+        </div>
+        <div class="col-md-6 text-center" data-aos="fade-left" data-aos-delay="200">
+          <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:320px;height:320px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="layout_padding" style="background:rgba(0,187,240,0.04);">
+    <div class="container text-center">
+      <a href="https://blogs.kalingaaerospace.in/" class="btn btn1" style="min-width:180px;margin-right:16px;">Learn More</a>
+      <a href="mailto:kalingaaerospace@gmail.com" class="btn btn1" style="min-width:180px;">Contact Us</a>
+    </div>
+  </section>
 
   <!-- info section -->
-
-  <!-- <section class="info_section layout_padding2">
+  <section class="info_section layout_padding2">
     <div class="container">
       <div class="row">
         <div class="col-md-6 col-lg-3 info_col">
           <div class="info_contact">
-            <h4>
-              Address
-            </h4>
+            <h4>Address</h4>
             <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
-                  Location
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
-                  Call +01 1234567890
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
-                  demo@gmail.com
-                </span>
-              </a>
+              <a href=""><i class="fa fa-map-marker" aria-hidden="true"></i><span>Location: Plot No-27, street No-65D, TALCHER, ODISHA, India</span></a>
+              <a href=""><i class="fa fa-phone" aria-hidden="true"></i><span>Call +91 6370327599</span></a>
+              <a href=""><i class="fa fa-envelope" aria-hidden="true"></i><span>kalingaaerospace@gmail.com</span></a>
             </div>
-          </div>
-          <div class="info_social">
-            <a href="">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-linkedin" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-            </a>
+            <div class="info_social">
+              <a href=""><i class="fa fa-facebook" aria-hidden="true"></i></a>
+              <a href=""><i class="fa fa-twitter" aria-hidden="true"></i></a>
+              <a href=""><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              <a href=""><i class="fa fa-instagram" aria-hidden="true"></i></a>
+            </div>
           </div>
         </div>
         <div class="col-md-6 col-lg-3 info_col">
           <div class="info_detail">
-            <h4>
-              Info
-            </h4>
-            <p>
-              necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful
-            </p>
+            <h4>Info</h4>
+            <p>Kalinga Aerospace reserves all rights to its proprietary technology, designs, and services, ensuring the highest standards of quality and innovation.</p>
           </div>
         </div>
         <div class="col-md-6 col-lg-2 mx-auto info_col">
           <div class="info_link_box">
-            <h4>
-              Links
-            </h4>
+            <h4>Links</h4>
             <div class="info_links">
-              <a class="active" href="index.html">
-                Home
-              </a>
-              <a class="" href="about.html">
-                About
-              </a>
-              <a class="" href="service.html">
-                Services
-              </a>
-              <a class="" href="why.html">
-                Why Us
-              </a>
-              <a class="" href="team.html">
-                Team
-              </a>
+              <a class="active" href="index.html">Home</a>
+              <a class="" href="about.html">About</a>
+              <a class="active" href="service.html">About Our Technology</a>
+              <a class="" href="Privacy Policy ＆ Terms and Conditions.html">Privacy Policy ＆ Terms and Conditions</a>
             </div>
           </div>
         </div>
         <div class="col-md-6 col-lg-3 info_col ">
-          <h4>
-            Subscribe
-          </h4>
+          <h4>Subscribe</h4>
           <form action="#">
             <input type="text" placeholder="Enter email" />
-            <button type="submit">
-              Subscribe
-            </button>
+            <button type="submit">Subscribe</button>
           </form>
         </div>
       </div>
     </div>
-  </section> -->
-
+  </section>
   <!-- end info section -->
 
   <!-- footer section -->
   <section class="footer_section">
     <div class="container">
-      <!-- <p>
-        &copy; <span id="displayYear"></span> All Rights Reserved By
-        <a href="https://html.design/">Free Html Templates</a>
-      </p> -->
+      <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="#"> Kalinga Aerospace</a></p>
     </div>
   </section>
   <!-- footer section -->
@@ -281,19 +221,18 @@ Providing affordable launch services, developing efficient satellites, and offer
   <!-- jQery -->
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <!-- bootstrap js -->
   <script type="text/javascript" src="js/bootstrap.js"></script>
   <!-- owl slider -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
   <!-- custom js -->
   <script type="text/javascript" src="js/custom.js"></script>
-  <!-- Google Map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  <!-- AOS Animation Library -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true });
   </script>
-  <!-- End Google Map -->
 
 </body>
 
