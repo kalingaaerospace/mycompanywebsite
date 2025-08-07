@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-users"></i>
+                <span>HR Management</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-item">
+                    <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#employees" class="nav-link" data-section="employees">
+                        <i class="fas fa-users"></i> Employees
+                    </a>
+                </div>  
+                <div class="nav-item">
+                    <a href="#files" class="nav-link" data-section="files">
+                        <i class="fas fa-folder"></i> Files
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#profile" class="nav-link" data-section="profile">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </div>
+                <div class="nav-item theme-switcher-item">
+                    <label class="theme-switcher">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider">
+                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i>
+                        </span>
+                    </label>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="container">
+                <h1>Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalEmployees">0</h3>
+                            <p>Total Employees</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalFiles">0</h3>
+                            <p>Total Files</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeEmployees">0</h3>
+                            <p>Active Employees</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="recentUploads">0</h3>
+                            <p>Recent Uploads</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h2>Recent Activities</h2>
+                        <div class="activity-list" id="recentActivities">
+                            <div class="activity-item">
+                                <i class="fas fa-info-circle"></i>
+                                <span>No recent activities</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h2>Quick Actions</h2>
+                        <div class="quick-actions">
+                            <button class="btn btn-primary" onclick="showSection('employees')">
+                                <i class="fas fa-user-plus"></i> Add Employee
+                            </button>
+                            <button class="btn btn-secondary" onclick="showSection('files')">
+                                <i class="fas fa-upload"></i> Upload File
+                            </button>
+                            <button class="btn btn-info" onclick="showSection('profile')">
+                                <i class="fas fa-user-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Employees Section -->
+        <section id="employees" class="content-section employee-section">
+            <div class="employee-container">
+                <div class="employee-header">
+                    <h1><i class="fas fa-users"></i> Employee Management</h1>
+                    <p>Manage your team members, view their details, and track their information</p>
+                    
+                    <div class="employee-controls">
+                        <div class="employee-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="employeeSearch" placeholder="Search employees by name, email, or department...">
+                        </div>
+                        <button class="add-employee-btn" id="addEmployeeBtn">
+                            <i class="fas fa-plus"></i> Add New Employee
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="employee-grid" id="employeeGrid">
+                    <div class="employee-loading">
+                        <div class="employee-loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Files Section -->
+        <section id="files" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>File Management</h1>
+                    <button class="btn btn-primary" id="uploadFileBtn">
+                        <i class="fas fa-upload"></i> Upload File
+                    </button>
+                </div>
+                
+                <div class="search-filter">
+                    <input type="text" id="fileSearch" placeholder="Search files..." class="search-input">
+                    <select id="fileTypeFilter" class="filter-select">
+                        <option value="">All File Types</option>
+                        <option value="pdf">PDF Documents</option>
+                        <option value="doc">Word Documents</option>
+                        <option value="image">Images</option>
+                        <option value="text">Text Files</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="fileDateFilter" class="filter-select">
+                        <option value="">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="older">Older</option>
+                    </select>
+                </div>
+                
+                <div class="file-upload-area" id="fileUploadArea">
+                    <div class="upload-box">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop files here or click to browse</p>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+                    </div>
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
+                </div>
+                
+                <div class="files-grid" id="filesGrid">
+                    <div class="loading-message">Loading files...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="content-section">
+            <div class="container">
+                <h1>User Profile</h1>
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profileAvatarContainer">
+                                <img id="profileAvatarImg" src="" alt="Profile Picture" style="display: none; width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                                <i id="profileAvatarIcon" class="fas fa-user-circle"></i>
+                                <div class="avatar-upload-overlay">
+                                    <i class="fas fa-camera"></i>
+                                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profileName">Loading...</h2>
+                                <p id="profileEmail">Loading...</p>
+                            </div>
+                        </div>
+                        
+                        <form id="profileForm" class="profile-form">
+                            <div class="form-group">
+                                <label for="bio">Bio</label>
+                                <textarea id="bio" name="bio" class="form-input" rows="3" placeholder="Tell us a bit about yourself..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select id="department" name="department" class="form-input">
+                                    <option value="">Select Department</option>
+                                    <option value="hr">Human Resources</option>
+                                    <option value="it">Information Technology</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="operations">Operations</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="position">Position</label>
+                                <input type="text" id="position" name="position" class="form-input">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login</h2>
+            </div>
+            <form id="loginForm" class="modal-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email or Username</label>
+                    <input type="text" id="loginEmail" name="email" required class="form-input" placeholder="Enter email or username">
+                </div>
+                <div class="form-group password-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required class="form-input">
+                    <i class="fas fa-eye password-toggle"></i>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+                <p><a href="#" id="forgotPassword">Forgot your password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Register</h2>
+            </div>
+            <form id="registerForm" class="modal-form">
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" required class="form-input">
+                </div>
+                <div class="form-group password-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" required class="form-input">
+                    <i class="fas fa-eye password-toggle"></i>
+                </div>
+                <div class="form-group password-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required class="form-input">
+                    <i class="fas fa-eye password-toggle"></i>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Register</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Immediate URL token check -->
+    <script>
+        // Immediately hide login modal if URL tokens are detected
+        (function() {
+            const hash = window.location.hash;
+            if (hash && hash.includes('access_token=')) {
+                console.log('🚨 URL tokens detected, hiding login modal immediately');
+                const loginModal = document.getElementById('loginModal');
+                const registerModal = document.getElementById('registerModal');
+                if (loginModal) loginModal.style.display = 'none';
+                if (registerModal) registerModal.style.display = 'none';
+            }
+        })();
+    </script>
+
+    <!-- Immediate redirect for password recovery -->
+    <script>
+        // Check for password recovery and redirect immediately
+        (function() {
+            const hash = window.location.hash;
+            if (hash && hash.includes('access_token=')) {
+                try {
+                    const params = new URLSearchParams(hash.substring(1));
+                    const type = params.get('type');
+                    
+                    if (type === 'recovery') {
+                        console.log('🔄 Password recovery detected, redirecting immediately');
+                        window.location.replace('password-change.html' + hash);
+                    }
+                } catch (error) {
+                    console.error('Error checking URL parameters:', error);
+                }
+            }
+        })();
+    </script>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/employees.js"></script>
+    <script src="js/files.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
