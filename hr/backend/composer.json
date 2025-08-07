@@ -1,0 +1,22 @@
+{
+    "name": "hr-system/backend",
+    "description": "HR Management System Backend",
+    "type": "project",
+    "authors": [
+        {
+            "name": "HR Team"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "vlucas/phpdotenv": "^5.4",
+        "firebase/php-jwt": "^6.4",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "HRSystem\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
