@@ -1,0 +1,95 @@
+{
+  "name": "sacred-chanting",
+  "version": "2.0.0",
+  "description": "A spiritual mantra chanting app with voice recognition, offline support, and social sharing",
+  "keywords": [
+    "mantra",
+    "chanting",
+    "meditation",
+    "spiritual",
+    "voice-recognition",
+    "pwa",
+    "offline",
+    "krishna",
+    "radha",
+    "shiva",
+    "jagannath"
+  ],
+  "homepage": "https://yourapp.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sacred-chanting.git"
+  },
+  "author": {
+    "name": "Kalinga Aerospace",
+    "email": "KALINGAAEROSPACE@gmail.com"
+  },
+  "license": "MIT",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "start": "python -m http.server 8000",
+    "build": "npm run minify:css && npm run minify:js",
+    "minify:css": "cssnano style.css style.min.css",
+    "minify:js": "terser script.js -o script.min.js -c -m",
+    "serve": "python -m http.server 8000",
+    "test": "lighthouse http://localhost:8000 --view",
+    "validate": "html5validator index.html",
+    "lint:css": "stylelint style.css",
+    "lint:js": "eslint script.js",
+    "optimize": "imagemin favicon*.png apple-touch-icon.png --out-dir=optimized",
+    "deploy:netlify": "netlify deploy --prod --dir=.",
+    "deploy:vercel": "vercel --prod",
+    "pwa:test": "lighthouse http://localhost:8000 --only-categories=pwa --view"
+  },
+  "devDependencies": {
+    "cssnano-cli": "^1.0.5",
+    "terser": "^5.19.4",
+    "lighthouse": "^10.4.0",
+    "html5validator": "^0.4.2",
+    "stylelint": "^15.10.3",
+    "eslint": "^8.48.0",
+    "imagemin-cli": "^7.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "index.html",
+    "style.css",
+    "script.js",
+    "manifest.json",
+    "sw.js",
+    "favicon.ico",
+    "apple-touch-icon.png",
+    "favicon-32x32.png",
+    "favicon-16x16.png",
+    "robots.txt",
+    "sitemap.xml",
+    ".htaccess"
+  ],
+  "pwa": {
+    "name": "Sacred Chanting",
+    "shortName": "Chanting",
+    "description": "Spiritual mantra chanting with voice recognition",
+    "categories": ["lifestyle", "health", "meditation"],
+    "display": "standalone",
+    "orientation": "portrait",
+    "themeColor": "#667eea",
+    "backgroundColor": "#667eea"
+  },
+  "performance": {
+    "budget": {
+      "maxSize": "500kb",
+      "firstContentfulPaint": "2s",
+      "largestContentfulPaint": "2.5s",
+      "cumulativeLayoutShift": "0.1"
+    }
+  }
+}

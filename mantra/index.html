@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Essential Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>Sacred Chanting - Free Spiritual Mantra Counter App</title>
+    <meta name="description" content="Free spiritual app for chanting mantras with voice recognition. Count Radha Radha, Krishna Krishna, Jay Jagannath, Om Namah Shivaya with offline support.">
+    <meta name="keywords" content="mantra chanting app, spiritual meditation, voice recognition chanting, offline mantra counter, Krishna chanting, Radha mantra, Om Namah Shivaya, Jay Jagannath, free spiritual app">
+    <meta name="author" content="Kalinga Aerospace">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://yourapp.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourapp.com/">
+    <meta property="og:title" content="Sacred Chanting - Free Spiritual Mantra Counter App">
+    <meta property="og:description" content="Count your mantra chants with voice recognition. Free spiritual companion for meditation practice.">
+    <meta property="og:image" content="https://yourapp.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourapp.com/">
+    <meta property="twitter:title" content="Sacred Chanting - Free Spiritual Mantra Counter App">
+    <meta property="twitter:description" content="Count your mantra chants with voice recognition. Free spiritual companion for meditation practice.">
+    <meta property="twitter:image" content="https://yourapp.com/twitter-image.jpg">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Sacred Chanting">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Sacred Chanting">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts with display=swap for performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Critical CSS (inline for first paint) -->
+    <style>
+        body{font-family:'Cinzel',serif;margin:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;overflow-x:hidden}
+        .page{display:none;min-height:100vh;padding:20px}
+        .page.active{display:block}
+        .container{max-width:480px;margin:0 auto}
+        .loading{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(102,126,234,0.9);display:flex;align-items:center;justify-content:center;z-index:9999}
+    </style>
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data:; media-src 'self' data:; connect-src 'self';">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="container">
+            <header class="header">
+                <div class="om-symbol">🕉️</div>
+                <h1 class="main-title">Sacred Chanting</h1>
+                <p class="subtitle">Connect with the Divine through Sacred Mantras</p>
+            </header>
+            
+            <main class="main-content">
+                <div class="question-section">
+                    <h2 class="question">What name do you want to chant today?</h2>
+                </div>
+                
+                <div class="mantra-options">
+                    <button class="mantra-btn" onclick="selectMantra('Radha Radha', '💖🌸')">
+                        <span class="mantra-symbol">💖🌸</span>
+                        <span class="mantra-text">Radha Radha</span>
+                    </button>
+                    
+                    <button class="mantra-btn" onclick="selectMantra('Krishna Krishna', '🎶🕊️')">
+                        <span class="mantra-symbol">🎶🕊️</span>
+                        <span class="mantra-text">Krishna Krishna</span>
+                    </button>
+                    
+                    <button class="mantra-btn" onclick="selectMantra('Jay Jagannath', '🛕✨🙏')">
+                        <span class="mantra-symbol">🛕✨🙏</span>
+                        <span class="mantra-text">Jay Jagannath</span>
+                    </button>
+                    
+                    <button class="mantra-btn" onclick="selectMantra('Om Namah Shivaya', '🕉️🔱')">
+                        <span class="mantra-symbol">🕉️🔱</span>
+                        <span class="mantra-text">Om Namah Shivaya</span>
+                    </button>
+                </div>
+                
+                <div class="suggest-section">
+                    <button class="suggest-btn" onclick="suggestMantra()">
+                        <span class="suggest-icon">✨</span>
+                        Suggest Your Own Mantra
+                    </button>
+                </div>
+            </main>
+            
+            <footer class="footer">
+                <p>🙏 May your chanting bring peace and divine blessings 🙏</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Chanting Page -->
+    <div id="chantingPage" class="page">
+        <div class="container">
+            <header class="chanting-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <div class="selected-mantra-display">
+                    <span id="selectedMantraSymbol" class="selected-symbol">🕉️</span>
+                    <h1 id="selectedMantraText" class="selected-mantra">Om</h1>
+                </div>
+            </header>
+            
+            <main class="chanting-content">
+                <div class="counter-display">
+                    <div class="counter-circle">
+                        <span class="counter-label">Total Times Chanted</span>
+                        <span id="chantCounter" class="counter-number">0</span>
+                    </div>
+                </div>
+                
+                <div class="voice-status" id="voiceStatus" style="display: none;">
+                    <div class="voice-indicator">
+                        <span class="voice-icon">🎤</span>
+                        <span class="voice-text">Listening... Chant your mantra</span>
+                        <div class="voice-wave"></div>
+                    </div>
+                </div>
+                
+                <div class="chant-controls">
+                    <button id="chantBtn" class="chant-button" onclick="chant()">
+                        <span class="chant-text">Chant</span>
+                        <div class="ripple"></div>
+                    </button>
+                    
+                    <button id="voiceChantBtn" class="voice-chant-button" onclick="toggleVoiceChanting()" title="Voice Chanting">
+                        <span class="voice-chant-icon">🎤</span>
+                        <span class="voice-chant-text">Voice</span>
+                    </button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="reset-btn" onclick="resetCounter()">
+                        <span class="reset-icon">🔄</span>
+                        Reset Count
+                    </button>
+                    
+                    <button class="share-btn" onclick="shareChantCount()">
+                        <span class="share-icon">📤</span>
+                        Share Count
+                    </button>
+                </div>
+                
+                <div class="meditation-tips">
+                    <p class="tip">💫 Close your eyes, breathe deeply, and chant with devotion</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Audio element for chanting sound -->
+    <audio id="chantSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUaADuU2Oq4eywEOYe+8tiKNgcAXbLq66hUEg1GnuHztmQaADqR3OqCXwcAd7XscKdXFgpFnOLzaFkQBDmV2/DfhCsEAHzF9dOCOQYBa7fp7J1TEQpIqejr6FgQBjmR3+6mUhIOW67p9pyMOgUAl9zxzn4cAD6N3ezSiSYEAHDH+M98JgQAXrPo9qJXEARCm9/yzXkfADqO4e3SeSkEAIvD8NSIR0k0AAAAI" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

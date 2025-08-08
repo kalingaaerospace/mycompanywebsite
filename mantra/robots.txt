@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://yourapp.com/sitemap.xml
+
+# Optimize crawling
+Crawl-delay: 1
+
+# Block unnecessary paths
+Disallow: /sw.js
+Disallow: /*.map$
+
+# Allow important files
+Allow: /manifest.json
+Allow: /style.css
+Allow: /script.js
+Allow: /favicon.ico
+Allow: /apple-touch-icon.png
