@@ -80,67 +80,356 @@
         }
     }
     
-    // Initialize Web Speech API
+    // Initialize Web Speech API with enhanced accuracy
     function initializeVoiceRecognition() {
         try {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRecognition) {
                 recognition = new SpeechRecognition();
                 recognition.continuous = true;
-                recognition.interimResults = false;
-                recognition.lang = 'en-IN'; // Indian English for better Sanskrit recognition
+                recognition.interimResults = true; // Enable interim results for better UX
+                recognition.maxAlternatives = 5; // Get multiple alternatives for better accuracy
                 
-                recognition.onstart = function() {
-                    console.log('🎤 Voice recognition started');
-                    voiceStatus.style.display = 'block';
-                    voiceChantBtn.classList.add('active');
-                };
+                // Setup all voice recognition handlers
+                setupVoiceRecognitionHandlers();
                 
-                recognition.onend = function() {
-                    console.log('🎤 Voice recognition ended');
-                    if (isVoiceChanting) {
-                        // Restart recognition automatically
-                        setTimeout(() => {
-                            try {
-                                recognition.start();
-                            } catch (error) {
-                                console.log('Voice recognition restart failed:', error);
-                            }
-                        }, 100);
-                    } else {
-                        voiceStatus.style.display = 'none';
-                        voiceChantBtn.classList.remove('active');
-                    }
-                };
-                
-                recognition.onresult = function(event) {
-                    const lastResult = event.results[event.results.length - 1];
-                    if (lastResult.isFinal) {
-                        const transcript = lastResult[0].transcript.toLowerCase().trim();
-                        console.log('🔊 Heard:', transcript);
-                        
-                        if (isMantraMatch(transcript)) {
-                            chant();
-                            showVoiceConfirmation(transcript);
-                        }
-                    }
-                };
-                
-                recognition.onerror = function(event) {
-                    console.log('🎤 Voice recognition error:', event.error);
-                    if (event.error === 'not-allowed') {
-                        showNotification('🎤 Microphone access denied. Please enable microphone permissions.');
-                        toggleVoiceChanting();
-                    }
-                };
-                
-                console.log('✅ Voice recognition initialized');
+                console.log('✅ Enhanced voice recognition initialized');
             } else {
                 console.log('❌ Speech recognition not supported');
+                showVoiceUnsupportedMessage();
             }
         } catch (error) {
             console.log('❌ Voice recognition initialization failed:', error);
+            handleVoiceRecognitionError(error);
         }
+    }
+                
+    // Process final voice recognition results with confidence checking
+    function processFinalResult(result) {
+        // Check each alternative result for confidence
+        for (let i = 0; i < result.length; i++) {
+            const alternative = result[i];
+            const transcript = alternative.transcript.toLowerCase().trim();
+            const confidence = alternative.confidence || 0;
+            
+            console.log(`🎤 Final result #${i}: "${transcript}" (confidence: ${Math.round(confidence * 100)}%)`);
+            
+            // Only process if confidence meets threshold
+            if (confidence >= (recognition.confidenceThreshold || 0.6)) {
+                // Count occurrences of "radha" (case-insensitive)
+                const radhaMatches = (transcript.match(/radha/g) || []).length;
+                
+                if (radhaMatches > 0) {
+                    console.log(`✅ Detected ${radhaMatches} "radha" utterances with ${Math.round(confidence * 100)}% confidence`);
+                    
+                    // Increment chant count by the number of "radha" occurrences
+                    chantCount += radhaMatches;
+                    updateCounterDisplay();
+                    saveChantCount();
+                    
+                    // Visual feedback for voice recognition
+                    showVoiceConfirmation(`${radhaMatches} x "radha" (${Math.round(confidence * 100)}%)`);
+                    
+                    // Play sound for successful recognition
+                    playChantSound();
+                    
+                    // Animate counter
+                    animateCounter();
+                    
+                    // Add haptic feedback
+                    if (navigator.vibrate) {
+                        navigator.vibrate([30, 10, 30]); // Short pattern for voice recognition
+                    }
+                    
+                    // Update voice guidance
+                    updateVoiceGuidance('recognized', radhaMatches);
+                    
+                    // Log milestones
+                    logMilestones();
+                    
+                    break; // Use the first high-confidence result
+                } else {
+                    // Check if it matches the current mantra pattern
+                    if (isMantraMatch(transcript)) {
+                        console.log(`✅ Detected mantra match: "${transcript}" with ${Math.round(confidence * 100)}% confidence`);
+                        
+                        chantCount++;
+                        updateCounterDisplay();
+                        saveChantCount();
+                        
+                        showVoiceConfirmation(`"${transcript}" (${Math.round(confidence * 100)}%)`);
+                        playChantSound();
+                        animateCounter();
+                        
+                        if (navigator.vibrate) {
+                            navigator.vibrate([30, 10, 30]);
+                        }
+                        
+                        updateVoiceGuidance('recognized', 1);
+                        logMilestones();
+                        
+                        break;
+                    }
+                }
+            } else {
+                console.log(`⚠️ Low confidence result ignored: "${transcript}" (${Math.round(confidence * 100)}%)`);
+                updateVoiceGuidance('low_confidence');
+            }
+        }
+    }
+    
+    // Process interim voice recognition results for user feedback
+    function processInterimResult(result) {
+        if (result.length > 0) {
+            const transcript = result[0].transcript.toLowerCase().trim();
+            const confidence = result[0].confidence || 0;
+            
+            console.log(`🎤 Interim result: "${transcript}" (confidence: ${Math.round(confidence * 100)}%)`);
+            
+            // Show real-time feedback
+            updateVoiceStatus(`Listening: "${transcript}..."`);
+            
+            // Provide encouraging feedback if we detect partial matches
+            if (transcript.includes('rad') || transcript.includes('radh')) {
+                updateVoiceGuidance('partial_match');
+            }
+        }
+    }
+    
+    // Update voice guidance messages
+    function updateVoiceGuidance(state, count = 0) {
+        let message = '';
+        let className = 'voice-guidance';
+        
+        switch (state) {
+            case 'listening':
+                message = '🎤 Listening... Speak "Radha" clearly';
+                className += ' listening';
+                break;
+            case 'sound_detected':
+                message = '👂 Sound detected - keep chanting!';
+                className += ' detected';
+                break;
+            case 'sound_ended':
+                message = '🤫 Waiting for your voice...';
+                className += ' waiting';
+                break;
+            case 'recognized':
+                message = `✅ Great! ${count} chant${count > 1 ? 's' : ''} recognized`;
+                className += ' success';
+                break;
+            case 'partial_match':
+                message = '🔄 Almost there... speak more clearly';
+                className += ' partial';
+                break;
+            case 'low_confidence':
+                message = '⚠️ Speak louder and clearer for better recognition';
+                className += ' warning';
+                break;
+            case 'no_match':
+                message = '❌ No match - try saying "Radha" more clearly';
+                className += ' no-match';
+                break;
+            case 'stopped':
+                message = '🔇 Voice recognition stopped';
+                className += ' stopped';
+                break;
+            default:
+                message = '🎤 Voice guidance ready';
+        }
+        
+        updateVoiceStatus(message);
+        
+        // Auto-clear success messages after 3 seconds
+        if (state === 'recognized') {
+            setTimeout(() => {
+                if (isVoiceChanting) {
+                    updateVoiceStatus('🎤 Listening for your next chant...');
+                }
+            }, 3000);
+        }
+    }
+    
+    // Update voice status display
+    function updateVoiceStatus(message) {
+        if (voiceStatus) {
+            voiceStatus.innerHTML = `
+                <div class="voice-status-content">
+                    <span class="voice-status-text">${message}</span>
+                </div>
+            `;
+        }
+    }
+    
+    // Handle voice recognition errors
+    function handleVoiceRecognitionError(error) {
+        let errorMessage = '';
+        let shouldRestart = false;
+        
+        switch (error) {
+            case 'no-speech':
+                errorMessage = '🤐 No speech detected - try speaking louder';
+                shouldRestart = true;
+                break;
+            case 'audio-capture':
+                errorMessage = '🎤 Microphone access denied - please allow microphone';
+                break;
+            case 'not-allowed':
+                errorMessage = '❌ Microphone permission denied - enable in browser settings';
+                break;
+            case 'network':
+                errorMessage = '🌐 Network error - check your internet connection';
+                shouldRestart = true;
+                break;
+            case 'aborted':
+                errorMessage = '⏹️ Voice recognition stopped';
+                break;
+            case 'language-not-supported':
+                errorMessage = '🌍 Language not supported - switching to default';
+                shouldRestart = true;
+                break;
+            default:
+                errorMessage = `❌ Voice recognition error: ${error}`;
+                shouldRestart = true;
+        }
+        
+        console.log(`🚨 Voice error: ${error} - ${errorMessage}`);
+        showNotification(errorMessage);
+        updateVoiceGuidance('error');
+        
+        // Auto-restart for certain errors
+        if (shouldRestart && isVoiceChanting) {
+            setTimeout(() => {
+                try {
+                    recognition.start();
+                } catch (restartError) {
+                    console.log('Failed to restart voice recognition:', restartError);
+                    isVoiceChanting = false;
+                    voiceChantBtn.classList.remove('active');
+                }
+            }, 2000);
+        } else if (!shouldRestart) {
+            isVoiceChanting = false;
+            voiceChantBtn.classList.remove('active');
+            voiceStatus.style.display = 'none';
+        }
+    }
+    
+    // Show message when voice recognition is not supported
+    function showVoiceUnsupportedMessage() {
+        const message = `
+            <div class="voice-unsupported">
+                <h3>🎤 Voice Recognition Not Available</h3>
+                <p>Your browser doesn't support voice recognition, but you can still:</p>
+                <ul>
+                    <li>✋ Tap the chant button manually</li>
+                    <li>⌨️ Use spacebar to chant</li>
+                    <li>🔄 Try using Chrome or Edge browser for voice features</li>
+                </ul>
+                <p><small>Voice recognition works best in Chrome, Edge, and Safari browsers.</small></p>
+            </div>
+        `;
+        
+        showNotification('🎤 Voice recognition not supported - use manual chanting');
+        console.log('❌ Voice recognition not supported on this browser/device');
+        
+        // Hide voice chant button if not supported
+        if (voiceChantBtn) {
+            voiceChantBtn.style.display = 'none';
+        }
+    }
+    
+    // Set language based on current mantra for better recognition
+    function setRecognitionLanguage() {
+        if (!recognition) return;
+        
+        // Set language based on mantra origin for better recognition
+        try {
+            if (currentMantra === 'Radha Radha' || currentMantra === 'Krishna Krishna') {
+                recognition.lang = 'hi-IN'; // Hindi/Sanskrit for Indian mantras
+            } else if (currentMantra === 'Om Namah Shivaya') {
+                recognition.lang = 'sa-IN'; // Sanskrit if available, fallback to Hindi
+            } else {
+                recognition.lang = 'en-US'; // Default English
+            }
+        } catch (error) {
+            console.log('Language setting failed, using default');
+            recognition.lang = 'en-US';
+        }
+        
+        console.log(`🌍 Voice recognition language set to: ${recognition.lang}`);
+    }
+    
+    // Complete voice recognition initialization with event handlers
+    function setupVoiceRecognitionHandlers() {
+        if (!recognition) return;
+        
+        // Set language based on current mantra for better recognition
+        setRecognitionLanguage();
+        
+        // Set confidence threshold and other accuracy settings
+        recognition.confidenceThreshold = 0.6; // 60% minimum confidence
+        
+        recognition.onstart = function() {
+            console.log('🎤 Voice recognition started with enhanced accuracy');
+            voiceStatus.style.display = 'block';
+            voiceChantBtn.classList.add('active');
+            updateVoiceGuidance('listening');
+        };
+        
+        recognition.onend = function() {
+            console.log('🎤 Voice recognition ended');
+            if (isVoiceChanting) {
+                // Restart recognition automatically with delay
+                setTimeout(() => {
+                    try {
+                        recognition.start();
+                    } catch (error) {
+                        console.log('Voice recognition restart failed:', error);
+                        handleVoiceRecognitionError(error);
+                    }
+                }, 300); // Increased delay for stability
+            } else {
+                voiceStatus.style.display = 'none';
+                voiceChantBtn.classList.remove('active');
+                updateVoiceGuidance('stopped');
+            }
+        };
+        
+        recognition.onresult = function(event) {
+            // Process all results since last event
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const result = event.results[i];
+                
+                if (result.isFinal) {
+                    // Process final results with confidence checking
+                    processFinalResult(result);
+                } else {
+                    // Show interim results for user feedback
+                    processInterimResult(result);
+                }
+            }
+        };
+        
+        recognition.onerror = function(event) {
+            console.log('🎤 Voice recognition error:', event.error);
+            handleVoiceRecognitionError(event.error);
+        };
+        
+        recognition.onnomatch = function() {
+            console.log('🎤 No match found - encouraging clearer speech');
+            updateVoiceGuidance('no_match');
+        };
+        
+        recognition.onsoundstart = function() {
+            updateVoiceGuidance('sound_detected');
+        };
+        
+        recognition.onsoundend = function() {
+            updateVoiceGuidance('sound_ended');
+        };
+        
+        console.log('✅ Voice recognition handlers setup complete');
     }
     
     // Initialize Speech Synthesis
