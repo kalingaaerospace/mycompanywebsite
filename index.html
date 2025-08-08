@@ -675,5 +675,63 @@ At Kalinga Aerospace, we revolutionize space access by offering affordable rocke
   <!-- End Google Map -->
 
 </body>
+<script>
+(function() {
+    'use strict';
+    
+    console.log('🔍 HR Password Reset Auto-Redirect Script Loaded');
+    
+    // Configuration
+    const HR_DOMAIN = 'https://hr.kalingaaerospace.in/frontend/password-reset.html';
+    
+    // Function to show redirect message
+    function showRedirectMessage(targetUrl) {
+        // Create overlay with Kalinga Aerospace branding
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; display: flex; justify-content: center; align-items: center;
+            z-index: 9999; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        `;
+        
+        overlay.innerHTML = `
+            <div style="text-align: center;">
+                <div style="width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                <h2 style="margin: 0 0 10px 0; font-size: 24px;">Redirecting to HR System...</h2>
+                <p style="margin: 0; opacity: 0.8;">You're being redirected to the HR password reset page</p>
+                <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.6;">Kalinga Aerospace</p>
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        `;
+        
+        document.body.appendChild(overlay);
+        setTimeout(() => { window.location.replace(targetUrl); }, 1500);
+    }
+    
+    // Check for password reset tokens
+    function checkForPasswordResetToken() {
+        const hash = window.location.hash;
+        
+        if (hash && hash.includes('access_token=') && hash.includes('type=recovery')) {
+            console.log('✅ Password reset token found - redirecting to HR system');
+            const hrResetUrl = HR_DOMAIN + hash;
+            showRedirectMessage(hrResetUrl);
+            return true;
+        }
+        return false;
+    }
+    
+    // Run the check
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkForPasswordResetToken);
+    } else {
+        checkForPasswordResetToken();
+    }
+    
+    console.log('✅ HR Password Reset Auto-Redirect Script Active');
+})();
+</script>
 
 </html>
+
