@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Gantt Chart Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            position: relative;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 0;
+            min-height: 700px;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-right: 3px solid #667eea;
+            overflow-y: auto;
+            max-height: 850px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h3 {
+            color: #667eea;
+            margin-bottom: 18px;
+            font-size: 1.3em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+            font-family: inherit;
+        }
+
+        .task-item {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 2px solid #e0e0e0;
+            position: relative;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .task-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .task-item input,
+        .task-item select,
+        .task-item textarea {
+            margin-bottom: 10px;
+        }
+
+        .remove-task {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-task:hover {
+            background: #ff3838;
+            transform: rotate(90deg);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-template {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .chart-area {
+            padding: 30px;
+            overflow-x: auto;
+            background: #fafbfc;
+        }
+
+        #ganttChartContainer {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .chart-title-section h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .chart-title-section p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .logo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 2px solid #e0e0e0;
+            padding: 14px;
+            text-align: center;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.95em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .task-name {
+            text-align: left;
+            font-weight: 600;
+            background: #f8f9fa;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .week-cell {
+            position: relative;
+            min-width: 80px;
+            height: 55px;
+            padding: 0;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+        }
+
+        .bar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .status-green { 
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .status-yellow { 
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            color: #333;
+        }
+        
+        .status-red { 
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .outcome-box {
+            border: 3px solid #667eea;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .outcome-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .outcome-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .outcome-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .date-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 1.05em;
+        }
+
+        .date-footer strong {
+            color: #667eea;
+        }
+
+        .download-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .download-section h4 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #2ecc71;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                max-height: none;
+            }
+        }
+
+        @media print {
+            .sidebar, .header {
+                display: none;
+            }
+            .content {
+                grid-template-columns: 1fr;
+            }
+            body {
+                background: white;
+            }
+            #ganttChartContainer {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Professional Gantt Chart Generator</h1>
+            <p>Create stunning project timelines • Export high-quality images • 100% Free</p>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <div class="section">
+                    <h3>🏢 Project Information</h3>
+                    <div class="form-group">
+                        <label>Project Title</label>
+                        <input type="text" id="projectTitle" value="Rotary Wing Aircraft System" placeholder="Enter project title">
+                    </div>
+                    <div class="form-group">
+                        <label>University/Organization</label>
+                        <input type="text" id="organization" value="Ramarajupur University" placeholder="Enter organization name">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Logo</label>
+                        <input type="file" id="logoFile" accept="image/*">
+                        <input type="text" id="logoUrl" placeholder="Or paste image URL" style="margin-top: 8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="text" id="startDate" value="13-11-24" placeholder="DD-MM-YY">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="text" id="endDate" value="8-22" placeholder="DD-MM-YY">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Weeks</label>
+                        <input type="number" id="totalWeeks" value="12" min="1" max="52">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>📋 Tasks Management</h3>
+                    <div id="tasksList"></div>
+                    <button class="btn btn-success btn-block" onclick="addTask()">➕ Add New Task</button>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 Project Outcomes</h3>
+                    <div id="outcomesList"></div>
+                    <button class="btn btn-success btn-block" onclick="addOutcome()">➕ Add Outcome</button>
+                </div>
+
+                <div class="section">
+                    <h3>⚙️ Actions</h3>
+                    <button class="btn btn-primary btn-block" onclick="generateChart()">🔄 Regenerate Chart</button>
+                    <button class="btn btn-template btn-block" onclick="loadTemplate()">📄 Load Sample Template</button>
+                </div>
+
+                <div class="download-section">
+                    <h4>💾 Export Options</h4>
+                    <button class="btn btn-download btn-block" onclick="downloadChart()">📥 Download as PNG</button>
+                    <button class="btn btn-secondary btn-block" onclick="window.print()">🖨️ Print Chart</button>
+                    <div class="loading" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <p>Generating your chart image...</p>
+                    </div>
+                    <div class="success-message" id="successMessage">
+                        ✅ Chart downloaded successfully!
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-area">
+                <div id="ganttChartContainer">
+                    <div id="ganttChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        let outcomes = [];
+        let currentLogoUrl = '';
+
+        function loadTemplate() {
+            document.getElementById('projectTitle').value = 'Rotary Wing Aircraft System';
+            document.getElementById('organization').value = 'Ramarajupur University';
+            
+            tasks = [
+                {name: 'Project Initiation & Planning', start: 1, duration: 1, status: 'green'},
+                {name: 'Preliminary Design Phase', start: 2, duration: 3, status: 'yellow'},
+                {name: 'Detailed Design Phase', start: 5, duration: 2, status: 'green'},
+                {name: 'Procurement And Inspections', start: 6, duration: 5, status: 'red'},
+                {name: 'Assembling and Testing', start: 10, duration: 2, status: 'red'},
+                {name: 'Final Adjustments', start: 11, duration: 2, status: 'red'}
+            ];
+
+            outcomes = [
+                {text: 'Main rotary system provides lift and thrust essential for aircraft operation'},
+                {text: 'Utilizes 80 cm diameter 3D printed propeller for aerodynamic efficiency'},
+                {text: '60 RPM Joshan shaft motor controlled via ESP32 and L298N driver'},
+                {text: 'IoT technology enables remote monitoring and automated control'},
+                {text: 'Custom designed lightweight 3D printed propeller (80cm diameter)'},
+                {text: 'ESP32 microcontroller provides advanced IoT capabilities'}
+            ];
+
+            renderTaskInputs();
+            renderOutcomeInputs();
+            generateChart();
+        }
+
+        function addTask() {
+            tasks.push({name: 'New Task', start: 1, duration: 1, status: 'green'});
+            renderTaskInputs();
+        }
+
+        function removeTask(index) {
+            if (confirm('Remove this task?')) {
+                tasks.splice(index, 1);
+                renderTaskInputs();
+                generateChart();
+            }
+        }
+
+        function addOutcome() {
+            outcomes.push({text: 'New outcome description'});
+            renderOutcomeInputs();
+        }
+
+        function removeOutcome(index) {
+            if (confirm('Remove this outcome?')) {
+                outcomes.splice(index, 1);
+                renderOutcomeInputs();
+                generateChart();
+            }
+        }
+
+        function renderTaskInputs() {
+            const container = document.getElementById('tasksList');
+            container.innerHTML = tasks.map((task, index) => `
+                <div class="task-item">
+                    <button class="remove-task" onclick="removeTask(${index})">×</button>
+                    <label>Task Name</label>
+                    <input type="text" placeholder="Enter task name" value="${task.name}" 
+                           onchange="tasks[${index}].name = this.value; generateChart();">
+                    <label>Start Week</label>
+                    <input type="number" placeholder="Start week" value="${task.start}" min="1"
+                           onchange="tasks[${index}].start = parseInt(this.value); generateChart();">
+                    <label>Duration (weeks)</label>
+                    <input type="number" placeholder="Duration" value="${task.duration}" min="1"
+                           onchange="tasks[${index}].duration = parseInt(this.value); generateChart();">
+                    <label>Status</label>
+                    <select onchange="tasks[${index}].status = this.value; generateChart();">
+                        <option value="green" ${task.status === 'green' ? 'selected' : ''}>✅ Completed</option>
+                        <option value="yellow" ${task.status === 'yellow' ? 'selected' : ''}>⚠️ In Progress</option>
+                        <option value="red" ${task.status === 'red' ? 'selected' : ''}>❌ Not Started</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        function renderOutcomeInputs() {
+            const container = document.getElementById('outcomesList');
+            container.innerHTML = outcomes.map((outcome, index) => `
+                <div class="task-item">
+                    <button class="remove-task" onclick="removeOutcome(${index})">×</button>
+                    <label>Outcome Description</label>
+                    <textarea placeholder="Enter outcome description" 
+                              onchange="outcomes[${index}].text = this.value; generateChart();">${outcome.text}</textarea>
+                </div>
+            `).join('');
+        }
+
+        function generateChart() {
+            const totalWeeks = parseInt(document.getElementById('totalWeeks').value);
+            const projectTitle = document.getElementById('projectTitle').value;
+            const organization = document.getElementById('organization').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            let html = `
+                <div class="chart-header">
+                    <div class="chart-title-section">
+                        <h2>${projectTitle}</h2>
+                        <p>${organization}</p>
+                    </div>
+                    ${currentLogoUrl ? `<img src="${currentLogoUrl}" class="logo-preview" alt="Project Logo">` : ''}
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; min-width: 200px;">Tasks</th>
+                            ${Array.from({length: totalWeeks}, (_, i) => `<th>W-${i + 1}</th>`).join('')}
+                            <th style="min-width: 150px;">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            tasks.forEach(task => {
+                html += '<tr>';
+                html += `<td class="task-name">${task.name}</td>`;
+                
+                for (let week = 1; week <= totalWeeks; week++) {
+                    const isInRange = week >= task.start && week < task.start + task.duration;
+                    const isStart = week === task.start;
+                    
+                    if (isInRange) {
+                        let icon = '';
+                        if (task.status === 'green') icon = '✓';
+                        else if (task.status === 'yellow') icon = '⚠';
+                        else icon = '✗';
+                        
+                        html += `<td class="week-cell"><div class="bar status-${task.status}">${isStart ? icon : ''}</div></td>`;
+                    } else {
+                        html += '<td class="week-cell"></td>';
+                    }
+                }
+                
+                const statusText = task.status === 'green' ? 'EXCELLENT' : 
+                                 task.status === 'yellow' ? 'Not Executed Properly' : 
+                                 'Not Done Yet';
+                html += `<td style="background: #f8f9fa; font-weight: 600;">${statusText}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+
+          
+
+            if (outcomes.length > 0) {
+                html += '<div class="outcome-box">';
+                html += '<div class="outcome-title">📌 PROJECT OUTCOMES & KEY FEATURES</div>';
+                outcomes.forEach(outcome => {
+                    html += `<div class="outcome-item">• ${outcome.text}</div>`;
+                });
+                html += '</div>';
+            }
+
+            document.getElementById('ganttChart').innerHTML = html;
+        }
+
+        async function downloadChart() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const successMessage = document.getElementById('successMessage');
+            
+            loadingIndicator.classList.add('active');
+            successMessage.classList.remove('active');
+
+            try {
+                const chartContainer = document.getElementById('ganttChartContainer');
+                
+                const canvas = await html2canvas(chartContainer, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const projectTitle = document.getElementById('projectTitle').value.replace(/[^a-z0-9]/gi, '_');
+                    link.download = `Gantt_Chart_${projectTitle}_${Date.now()}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    loadingIndicator.classList.remove('active');
+                    successMessage.classList.add('active');
+                    setTimeout(() => successMessage.classList.remove('active'), 3000);
+                });
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Error generating chart image. Please try again.');
+                loadingIndicator.classList.remove('active');
+            }
+        }
+
+        document.getElementById('logoFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentLogoUrl = event.target.result;
+                    generateChart();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('logoUrl').addEventListener('change', function(e) {
+            currentLogoUrl = e.target.value;
+            if (currentLogoUrl) generateChart();
+        });
+
+        ['projectTitle', 'organization', 'startDate', 'endDate', 'totalWeeks'].forEach(id => {
+            document.getElementById(id).addEventListener('input', generateChart);
+        });
+
+        loadTemplate();
+    </script>
+</body>
+</html>
