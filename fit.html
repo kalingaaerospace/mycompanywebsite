@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker - Sujeet Samal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --accent: #4CAF50;
+            --accent-hover: #45a049;
+            --border: #ddd;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #f5f5f5;
+            --text-secondary: #aaa;
+            --accent: #66bb6a;
+            --accent-hover: #81c784;
+            --border: #444;
+            --shadow: rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .profile {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .profile-info h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .nav-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Week Cards */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .day-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .day-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .day-card .calories {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+        }
+
+        .section-content {
+            margin-top: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .section.expanded .section-content {
+            max-height: 2000px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--text-secondary);
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        /* Preset Foods */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preset-item {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .preset-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .preset-item.added {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Logs */
+        .log-entry {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-entry .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Totals */
+        .totals {
+            background: linear-gradient(135deg, var(--accent) 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .total-item {
+            text-align: center;
+        }
+
+        .total-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .total-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .profile {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .week-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Profile -->
+        <div class="header">
+            <div class="profile">
+                <div class="profile-info">
+                    <h1 id="userName">Sujeet Samal</h1>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="stat-label">Height</div>
+                            <div class="stat-value" id="userHeight">175 cm</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Weight</div>
+                            <div class="stat-value" id="userWeight">-- kg</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">BMI</div>
+                            <div class="stat-value" id="userBMI">--</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Week</div>
+                            <div class="stat-value" id="weekNumber">1</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="showPage('daily')">Daily Log</button>
+            <button class="nav-btn" onclick="showPage('weekly')">Weekly Summary</button>
+            <button class="nav-btn" onclick="showPage('settings')">Settings</button>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="section">
+                <h2>Today: <span id="currentDate"></span></h2>
+            </div>
+            <div class="section">
+                <h2>This Week</h2>
+                <div class="week-grid" id="weekGrid"></div>
+            </div>
+        </div>
+
+        <!-- Daily Log Page -->
+        <div id="daily" class="page">
+            <div class="section">
+                <h2>Daily Log - <span id="dailyDate"></span></h2>
+                <button class="btn btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button>
+            </div>
+
+            <!-- Morning Section -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🌅 Morning</h2>
+                    <span>▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Running Log</h3>
+                    <div class="form-group">
+                        <label>Minutes</label>
+                        <input type="number" id="runMinutes" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Distance (km)</label>
+                        <input type="number" step="0.1" id="runDistance" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addRunning()">Add Running</button>
+
+                    <h3 style="margin-top: 20px;">Workout</h3>
+                    <div class="preset-grid">
+                        <div class="preset-item" onclick="addWorkout('Pushups', 'reps', 0.29)">
+                            Pushups<br><small>0.29 cal/rep</small>
+                        </div>
+                        <div class="preset-item" onclick="addWorkout('Squats', 'reps', 0.32)">
+                            Squats<br><small>0.32 cal/rep</small>
+                        </div>
+                        <div class="preset-item" onclick="addWorkout('Crunches', 'reps', 0.20)">
+                            Crunches<br><small>0.20 cal/rep</small>
+                        </div>
+                        <div class="preset-item" onclick="addWorkout('Rock Climbing', 'min', 8)">
+                            Rock Climbing<br><small>8 cal/min</small>
+                        </div>
+                        <div class="preset-item" onclick="addWorkout('Jumping Jacks', 'min', 8)">
+                            Jumping Jacks<br><small>8 cal/min</small>
+                        </div>
+                        <div class="preset-item" onclick="addWorkout('Plank', 'min', 5)">
+                            Plank<br><small>5 cal/min</small>
+                        </div>
+                    </div>
+
+                    <h4>Custom Exercise</h4>
+                    <div class="form-group">
+                        <label>Exercise Name</label>
+                        <input type="text" id="customExercise" placeholder="Exercise name">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration/Reps</label>
+                        <input type="number" id="customAmount" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" id="customCalories" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomExercise('morning')">Add Custom Exercise</button>
+
+                    <div id="morningWorkoutLog"></div>
+                </div>
+            </div>
+
+            <!-- Breakfast Section -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🍳 Breakfast</h2>
+                    <span>▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Preset Foods</h3>
+                    <div class="preset-grid">
+                        <div class="preset-item" onclick="addFood('breakfast', 'Boiled Egg', 70)">Boiled Egg<br><small>70 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Milk 170ml', 100)">Milk<br><small>100 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Fruit Salad', 80)">Fruit Salad<br><small>80 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Mess Upma', 150)">Mess Upma<br><small>150 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Idli', 60)">Idli<br><small>60 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Bara', 90)">Bara<br><small>90 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('breakfast', 'Pitha', 120)">Pitha<br><small>120 kcal</small></div>
+                    </div>
+
+                    <h4>Custom Food</h4>
+                    <div class="form-group">
+                        <label>Food Name</label>
+                        <input type="text" id="breakfastCustomName" placeholder="Food name">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" id="breakfastCustomCal" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomFood('breakfast')">Add Custom Food</button>
+
+                    <div id="breakfastLog"></div>
+                </div>
+            </div>
+
+            <!-- Lunch Section -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🍛 Lunch</h2>
+                    <span>▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Preset Foods</h3>
+                    <div class="preset-grid">
+                        <div class="preset-item" onclick="addFood('lunch', 'Roti', 80)">Roti<br><small>80 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('lunch', 'Rice Bowl', 200)">Rice<br><small>200 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('lunch', 'Dal', 120)">Dal<br><small>120 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('lunch', 'Paneer Curry', 180)">Paneer<br><small>180 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('lunch', 'Mixed Veg', 100)">Mixed Veg<br><small>100 kcal</small></div>
+                    </div>
+
+                    <h4>Custom Food</h4>
+                    <div class="form-group">
+                        <label>Food Name</label>
+                        <input type="text" id="lunchCustomName" placeholder="Food name">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" id="lunchCustomCal" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomFood('lunch')">Add Custom Food</button>
+
+                    <div id="lunchLog"></div>
+                </div>
+            </div>
+
+            <!-- Evening Section -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🌆 Evening</h2>
+                    <span>▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Snacks</h3>
+                    <div class="preset-grid">
+                        <div class="preset-item" onclick="addFood('evening', 'Boiled Egg', 70)">Boiled Egg<br><small>70 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('evening', 'Milk 170ml', 100)">Milk<br><small>100 kcal</small></div>
+                    </div>
+
+                    <h4>Custom Food</h4>
+                    <div class="form-group">
+                        <label>Food Name</label>
+                        <input type="text" id="eveningCustomName" placeholder="Food name">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" id="eveningCustomCal" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomFood('evening')">Add Custom Food</button>
+
+                    <h3 style="margin-top: 20px;">Evening Workout</h3>
+                    <div class="form-group">
+                        <label>Exercise Name</label>
+                        <input type="text" id="eveningExercise" placeholder="Exercise name">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration/Reps</label>
+                        <input type="number" id="eveningAmount" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories Burned</label>
+                        <input type="number" id="eveningCalories" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomExercise('evening')">Add Exercise</button>
+
+                    <div id="eveningLog"></div>
+                </div>
+            </div>
+
+            <!-- Dinner Section -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🌙 Dinner</h2>
+                    <span>▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Preset Foods</h3>
+                    <div class="preset-grid">
+                        <div class="preset-item" onclick="addFood('dinner', 'Roti', 80)">Roti<br><small>80 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('dinner', 'Rice Bowl', 200)">Rice<br><small>200 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('dinner', 'Curry', 100)">Curry<br><small>100 kcal</small></div>
+                        <div class="preset-item" onclick="addFood('dinner', 'Paneer', 180)">Paneer<br><small>180 kcal</small></div>
+                    </div>
+
+                    <h4>Custom Food</h4>
+                    <div class="form-group">
+                        <label>Food Name</label>
+                        <input type="text" id="dinnerCustomName" placeholder="Food name">
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" id="dinnerCustomCal" placeholder="0">
+                    </div>
+                    <button class="btn" onclick="addCustomFood('dinner')">Add Custom Food</button>
+
+                    <div id="dinnerLog"></div>
+                </div>
+            </div>
+
+            <!-- Daily Totals -->
+            <div class="totals">
+                <h2>Daily Totals</h2>
+                <div class="totals-grid">
+                    <div class="total-item">
+                        <div class="total-label">Calories Eaten</div>
+                        <div class="total-value" id="totalEaten">0</div>
+                    </div>
+                    <div class="total-item">
+                        <div class="total-label">Calories Burned</div>
+                        <div class="total-value" id="totalBurned">0</div>
+                    </div>
+                    <div class="total-item">
+                        <div class="total-label">Net Calories</div>
+                        <div class="total-value" id="netCalories">0</div>
+                    </div>
+                    <div class="total-item">
+                        <div class="total-label">Weight Change</div>
+                        <div class="total-value" id="weightChange">0 kg</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Summary Page -->
+        <div id="weekly" class="page">
+            <div class="section">
+                <h2>Weekly Summary - Week <span id="summaryWeekNum"></span></h2>
+                <div class="totals-grid" style="margin-top: 20px;">
+                    <div class="total-item" style="color: var(--text-primary);">
+                        <div class="total-label">Total Eaten</div>
+                        <div class="total-value" id="weeklyEaten">0</div>
+                    </div>
+                    <div class="total-item" style="color: var(--text-primary);">
+                        <div class="total-label">Total Burned</div>
+                        <div class="total-value" id="weeklyBurned">0</div>
+                    </div>
+                    <div class="total-item" style="color: var(--text-primary);">
+                        <div class="total-label">Net Calories</div>
+                        <div class="total-value" id="weeklyNet">0</div>
+                    </div>
+                    <div class="total-item" style="color: var(--text-primary);">
+                        <div class="total-label">Predicted Weight Change</div>
+                        <div class="total-value" id="weeklyWeightChange">0 kg</div>
+                    </div>
+                </div>
+                <button class="btn btn-danger" onclick="resetWeek()" style="margin-top: 20px;">Reset Week</button>
+            </div>
+
+            <div class="section">
+                <h3>Daily Breakdown</h3>
+                <div id="weeklyBreakdown"></div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings" class="page">
+            <div class="section">
+                <h2>Settings</h2>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="settingsName" value="Sujeet Samal">
+                </div>
+                <div class="form-group">
+                    <label>Height (cm)</label>
+                    <input type="number" id="settingsHeight" value="175">
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" step="0.1" id="settingsWeight" placeholder="Enter weight">
+                </div>
+                <button class="btn" onclick="saveSettings()">Save Settings</button>
+            </div>
+
+            <div class="section">
+                <h2>Data Management</h2>
+                <button class="btn" onclick="exportData()">Export Data (JSON)</button>
+                <button class="btn btn-secondary" onclick="importData()">Import Data (JSON)</button>
+                <button class="btn btn-danger" onclick="resetAllData()">Reset All Data</button>
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="handleImport(event)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize app
+        let currentDate = new Date();
+        let selectedDate = new Date();
+        const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            loadSettings();
+            updateDashboard();
+            updateWeeklySummary();
+        };
+
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Page navigation
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (pageName === 'weekly') {
+                updateWeeklySummary();
+            }
+        }
+
+        // Section toggle
+        function toggleSection(header) {
+            header.parentElement.classList.toggle('expanded');
+        }
+
+        // Load settings
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            document.getElementById('userName').textContent = settings.name || 'Sujeet Samal';
+            document.getElementById('userHeight').textContent = (settings.height || 175) + ' cm';
+            
+            if (settings.weight) {
+                document.getElementById('userWeight').textContent = settings.weight + ' kg';
+                const bmi = (settings.weight / Math.pow((settings.height || 175) / 100, 2)).toFixed(1);
+                document.getElementById('userBMI').textContent = bmi;
+            }
+
+            // Calculate week number
+            const weekNum = Math.ceil((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 604800000);
+            document.getElementById('weekNumber').textContent = weekNum;
+        }
+
+        // Save settings
+        function saveSettings() {
+            const settings = {
+                name: document.getElementById('settingsName').value,
+                height: parseFloat(document.getElementById('settingsHeight').value),
+                weight: parseFloat(document.getElementById('settingsWeight').value)
+            };
+            localStorage.setItem('settings', JSON.stringify(settings));
+            loadSettings();
+            alert('Settings saved!');
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            document.getElementById('currentDate').textContent = formatDate(currentDate);
+            
+            const weekGrid = document.getElementById('weekGrid');
+            weekGrid.innerHTML = '';
+            
+            const monday = getMonday(currentDate);
+            
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + i);
+                const dateKey = getDateKey(day);
+                const data = JSON.parse(localStorage.getItem(dateKey) || '{"eaten": 0, "burned": 0}');
+                
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                card.onclick = () => openDay(day);
+                card.innerHTML = `
+                    <h3>${weekDays[i]}</h3>
+                    <p>${formatDate(day)}</p>
+                    <div class="calories">
+                        <div>Eaten: ${data.eaten} kcal</div>
+                        <div>Burned: ${data.burned} kcal</div>
+                    </div>
+                `;
+                weekGrid.appendChild(card);
+            }
+        }
+
+        // Open daily log for specific day
+        function openDay(day) {
+            selectedDate = new Date(day);
+            document.getElementById('dailyDate').textContent = formatDate(selectedDate);
+            showPage('daily');
+            loadDailyData();
+        }
+
+        // Load daily data
+        function loadDailyData() {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            // Clear all logs
+            ['breakfast', 'lunch', 'evening', 'dinner'].forEach(meal => {
+                document.getElementById(meal + 'Log').innerHTML = '';
+            });
+            document.getElementById('morningWorkoutLog').innerHTML = '';
+            
+            // Load food logs
+            if (data.food) {
+                Object.keys(data.food).forEach(meal => {
+                    if (data.food[meal]) {
+                        data.food[meal].forEach((item, idx) => {
+                            addFoodToLog(meal, item.name, item.calories, idx);
+                        });
+                    }
+                });
+            }
+            
+            // Load exercise logs
+            if (data.exercise) {
+                Object.keys(data.exercise).forEach(time => {
+                    if (data.exercise[time]) {
+                        data.exercise[time].forEach((item, idx) => {
+                            addExerciseToLog(time, item.name, item.amount, item.calories, idx);
+                        });
+                    }
+                });
+            }
+            
+            updateDailyTotals();
+        }
+
+        // Add running
+        function addRunning() {
+            const minutes = parseFloat(document.getElementById('runMinutes').value) || 0;
+            const distance = parseFloat(document.getElementById('runDistance').value) || 0;
+            
+            let calories = 0;
+            if (distance > 0) {
+                calories = distance * 60;
+            } else if (minutes > 0) {
+                calories = minutes * 10;
+            }
+            
+            if (calories > 0) {
+                const name = `Running (${distance > 0 ? distance + ' km' : minutes + ' min'})`;
+                saveDailyExercise('morning', name, distance || minutes, calories);
+                document.getElementById('runMinutes').value = '';
+                document.getElementById('runDistance').value = '';
+            }
+        }
+
+        // Add workout
+        function addWorkout(name, type, rate) {
+            const amount = prompt(`Enter number of ${type}:`);
+            if (amount && parseFloat(amount) > 0) {
+                const calories = parseFloat(amount) * rate;
+                saveDailyExercise('morning', `${name} (${amount} ${type})`, parseFloat(amount), calories);
+            }
+        }
+
+        // Add custom exercise
+        function addCustomExercise(time) {
+            const nameField = time === 'morning' ? 'customExercise' : 'eveningExercise';
+            const amountField = time === 'morning' ? 'customAmount' : 'eveningAmount';
+            const calField = time === 'morning' ? 'customCalories' : 'eveningCalories';
+            
+            const name = document.getElementById(nameField).value;
+            const amount = parseFloat(document.getElementById(amountField).value) || 0;
+            const calories = parseFloat(document.getElementById(calField).value) || 0;
+            
+            if (name && calories > 0) {
+                saveDailyExercise(time, name, amount, calories);
+                document.getElementById(nameField).value = '';
+                document.getElementById(amountField).value = '';
+                document.getElementById(calField).value = '';
+            }
+        }
+
+        // Add food
+        function addFood(meal, name, calories) {
+            saveDailyFood(meal, name, calories);
+        }
+
+        // Add custom food
+        function addCustomFood(meal) {
+            const name = document.getElementById(meal + 'CustomName').value;
+            const calories = parseFloat(document.getElementById(meal + 'CustomCal').value) || 0;
+            
+            if (name && calories > 0) {
+                saveDailyFood(meal, name, calories);
+                document.getElementById(meal + 'CustomName').value = '';
+                document.getElementById(meal + 'CustomCal').value = '';
+            }
+        }
+
+        // Save daily food
+        function saveDailyFood(meal, name, calories) {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            if (!data.food[meal]) data.food[meal] = [];
+            data.food[meal].push({ name, calories });
+            
+            localStorage.setItem(dateKey, JSON.stringify(data));
+            loadDailyData();
+        }
+
+        // Save daily exercise
+        function saveDailyExercise(time, name, amount, calories) {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            if (!data.exercise[time]) data.exercise[time] = [];
+            data.exercise[time].push({ name, amount, calories });
+            
+            localStorage.setItem(dateKey, JSON.stringify(data));
+            loadDailyData();
+        }
+
+        // Add food to log display
+        function addFoodToLog(meal, name, calories, idx) {
+            const log = document.getElementById(meal + 'Log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <div>
+                    <strong>${name}</strong><br>
+                    <small>${calories} kcal</small>
+                </div>
+                <button class="delete-btn" onclick="deleteFood('${meal}', ${idx})">Delete</button>
+            `;
+            log.appendChild(entry);
+        }
+
+        // Add exercise to log display
+        function addExerciseToLog(time, name, amount, calories, idx) {
+            const logId = time === 'morning' ? 'morningWorkoutLog' : 'eveningLog';
+            const log = document.getElementById(logId);
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <div>
+                    <strong>${name}</strong><br>
+                    <small>${calories} kcal burned</small>
+                </div>
+                <button class="delete-btn" onclick="deleteExercise('${time}', ${idx})">Delete</button>
+            `;
+            log.appendChild(entry);
+        }
+
+        // Delete food
+        function deleteFood(meal, idx) {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            if (data.food[meal]) {
+                data.food[meal].splice(idx, 1);
+            }
+            
+            localStorage.setItem(dateKey, JSON.stringify(data));
+            loadDailyData();
+        }
+
+        // Delete exercise
+        function deleteExercise(time, idx) {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            if (data.exercise[time]) {
+                data.exercise[time].splice(idx, 1);
+            }
+            
+            localStorage.setItem(dateKey, JSON.stringify(data));
+            loadDailyData();
+        }
+
+        // Update daily totals
+        function updateDailyTotals() {
+            const dateKey = getDateKey(selectedDate);
+            const data = JSON.parse(localStorage.getItem(dateKey) || '{"food": {}, "exercise": {}}');
+            
+            let totalEaten = 0;
+            let totalBurned = 0;
+            
+            // Calculate eaten
+            if (data.food) {
+                Object.values(data.food).forEach(meal => {
+                    if (meal) {
+                        meal.forEach(item => totalEaten += item.calories);
+                    }
+                });
+            }
+            
+            // Calculate burned
+            if (data.exercise) {
+                Object.values(data.exercise).forEach(workout => {
+                    if (workout) {
+                        workout.forEach(item => totalBurned += item.calories);
+                    }
+                });
+            }
+            
+            const net = totalEaten - totalBurned;
+            const weightChange = (net / 7700).toFixed(3);
+            
+            document.getElementById('totalEaten').textContent = Math.round(totalEaten);
+            document.getElementById('totalBurned').textContent = Math.round(totalBurned);
+            document.getElementById('netCalories').textContent = Math.round(net);
+            document.getElementById('weightChange').textContent = (weightChange >= 0 ? '+' : '') + weightChange + ' kg';
+            
+            // Update stored totals
+            data.eaten = totalEaten;
+            data.burned = totalBurned;
+            localStorage.setItem(dateKey, JSON.stringify(data));
+        }
+
+        // Update weekly summary
+        function updateWeeklySummary() {
+            const monday = getMonday(currentDate);
+            let weeklyEaten = 0;
+            let weeklyBurned = 0;
+            
+            const breakdown = document.getElementById('weeklyBreakdown');
+            breakdown.innerHTML = '';
+            
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + i);
+                const dateKey = getDateKey(day);
+                const data = JSON.parse(localStorage.getItem(dateKey) || '{"eaten": 0, "burned": 0}');
+                
+                weeklyEaten += data.eaten || 0;
+                weeklyBurned += data.burned || 0;
+                
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `
+                    <div>
+                        <strong>${weekDays[i]} - ${formatDate(day)}</strong><br>
+                        <small>Eaten: ${Math.round(data.eaten || 0)} kcal | Burned: ${Math.round(data.burned || 0)} kcal</small>
+                    </div>
+                `;
+                breakdown.appendChild(entry);
+            }
+            
+            const weeklyNet = weeklyEaten - weeklyBurned;
+            const weeklyWeightChange = (weeklyNet / 7700).toFixed(2);
+            
+            document.getElementById('summaryWeekNum').textContent = document.getElementById('weekNumber').textContent;
+            document.getElementById('weeklyEaten').textContent = Math.round(weeklyEaten);
+            document.getElementById('weeklyBurned').textContent = Math.round(weeklyBurned);
+            document.getElementById('weeklyNet').textContent = Math.round(weeklyNet);
+            document.getElementById('weeklyWeightChange').textContent = (weeklyWeightChange >= 0 ? '+' : '') + weeklyWeightChange + ' kg';
+        }
+
+        // Reset week
+        function resetWeek() {
+            if (confirm('Are you sure you want to reset this week? This will clear all daily logs.')) {
+                const monday = getMonday(currentDate);
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(monday);
+                    day.setDate(monday.getDate() + i);
+                    const dateKey = getDateKey(day);
+                    localStorage.removeItem(dateKey);
+                }
+                
+                updateDashboard();
+                updateWeeklySummary();
+                alert('Week reset successfully!');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            const allData = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+            }
+            
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fitness-tracker-backup.json';
+            a.click();
+        }
+
+        // Import data
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        Object.keys(data).forEach(key => {
+                            localStorage.setItem(key, data[key]);
+                        });
+                        alert('Data imported successfully!');
+                        location.reload();
+                    } catch (err) {
+                        alert('Error importing data. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Reset all data
+        function resetAllData() {
+            if (confirm('Are you sure you want to reset ALL data? This cannot be undone!')) {
+                if (confirm('Really sure? All your logs will be deleted permanently!')) {
+                    localStorage.clear();
+                    alert('All data has been reset.');
+                    location.reload();
+                }
+            }
+        }
+
+        // Utility functions
+        function getDateKey(date) {
+            return `data_${date.getFullYear()}_${String(date.getMonth() + 1).padStart(2, '0')}_${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function formatDate(date) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+        function getMonday(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+    </script>
+</body>
+</html>
